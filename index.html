@@ -23,7 +23,7 @@
 html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
 
 /* HEADER */
-.hdr{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;background:rgba(7,9,15,0.98);border-bottom:1px solid var(--border2);position:relative;z-index:200;flex-shrink:0}
+.hdr{display:flex;align-items:center;justify-content:center;height:48px;padding:0 16px;background:rgba(7,9,15,0.98);border-bottom:1px solid var(--border2);position:relative;z-index:200;flex-shrink:0}
 .logo{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;letter-spacing:.03em}
 .logo-mark{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#4f8ef7,#9d6ef8);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
 .logo-ver{font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;background:var(--surface2);border:1px solid var(--border2);padding:1px 5px;border-radius:3px;margin-left:1px}
@@ -245,12 +245,6 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
     Coopertruni
     <span class="logo-ver">v1.0</span>
   </div>
-  <div class="hdr-right">
-    <button class="btn" onclick="addNodeGlobal()">＋ Etapa</button>
-    <button class="btn" onclick="openMermaid('export')">⬇ Mermaid</button>
-    <button class="btn btn-blue" onclick="exportHTML()">💾 Salvar HTML</button>
-    <button class="btn" onclick="resetAll()">↺ Restaurar</button>
-  </div>
 </header>
 
 <div class="app">
@@ -270,62 +264,10 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
       </div>
       <div class="tabs">
         <div class="tab on" id="t-info" onclick="switchTab('info')">Info</div>
-        <div class="tab" id="t-edit" onclick="switchTab('edit')">Editar</div>
       </div>
       <div class="p-body">
         <div id="b-info"></div>
-        <div id="b-edit" style="display:none"></div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Mermaid Modal -->
-<div class="mmd-panel" id="mmd-panel">
-  <div class="mmd-box">
-    <div class="mmd-hdr">
-      <h3 id="mmd-title">Mermaid — Exportar / Importar</h3>
-      <button class="p-close" onclick="closeMermaid()">✕</button>
-    </div>
-    <div class="mmd-tabs">
-      <div class="mmd-tab on" id="mmd-tab-exp" onclick="mmdView('export')">Exportar</div>
-      <div class="mmd-tab" id="mmd-tab-imp" onclick="mmdView('import')">Importar</div>
-    </div>
-    <div class="mmd-body">
-      <div id="mmd-export-area">
-        <div class="mmd-info">Cole no <a href="https://mermaid.live" target="_blank">mermaid.live</a>, Notion, GitHub ou Obsidian.</div>
-        <textarea class="mmd-ta" id="mmd-out" readonly></textarea>
-      </div>
-      <div id="mmd-import-area" style="display:none">
-        <div class="mmd-info">Cole o código Mermaid editado. O fluxo será reconstruído. Detalhes devem ser re-editados.</div>
-        <textarea class="mmd-ta" id="mmd-in" placeholder="Cole o código Mermaid aqui..."></textarea>
-      </div>
-    </div>
-    <div class="mmd-footer">
-      <button class="btn" onclick="closeMermaid()">Fechar</button>
-      <button class="btn btn-blue" id="mmd-action-btn" onclick="mmdAction()">Copiar código</button>
-    </div>
-  </div>
-</div>
-
-<!-- Add Node Modal -->
-<div class="modal" id="add-modal">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <h3 id="add-modal-title">Adicionar etapa</h3>
-      <button class="p-close" onclick="closeAddModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="fg"><label class="fl">Setor responsável</label><input class="fi" id="am-sector" placeholder="ex: Financeiro"/></div>
-      <div class="fg"><label class="fl">Título da etapa</label><input class="fi" id="am-title" placeholder="ex: Análise de crédito"/></div>
-      <div class="fg"><label class="fl">Descrição resumida</label><input class="fi" id="am-sub" placeholder="ex: Avalia histórico financeiro do cliente"/></div>
-      <div class="fg"><label class="fl">Cor</label><div class="swatches" id="am-swatches"></div></div>
-      <div class="fg"><label class="fl">Fase (grupo)</label><select class="fs" id="am-phase"></select></div>
-      <div class="fg"><label class="fl">Inserir após o nó</label><select class="fs" id="am-after"></select></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeAddModal()">Cancelar</button>
-      <button class="btn btn-blue" onclick="confirmAddNode()">Adicionar</button>
     </div>
   </div>
 </div>
@@ -549,12 +491,6 @@ function makeConn(lbl, afterSlotId){
   line.className = 'conn-line med';
   wrap.appendChild(line);
   if(lbl){ const l = document.createElement('div'); l.className='conn-lbl'; l.textContent=lbl; wrap.appendChild(l); }
-  const addBtn = document.createElement('button');
-  addBtn.className = 'conn-add';
-  addBtn.title = 'Inserir etapa aqui';
-  addBtn.textContent = '+';
-  addBtn.onclick = (e) => { e.stopPropagation(); addNodeGlobal(afterSlotId); };
-  wrap.appendChild(addBtn);
   return wrap;
 }
 
@@ -609,11 +545,7 @@ function makeNode(id, d){
     <span class="drag-handle" title="Arrastar">⠿</span>
     <div class="n-tag">${esc(d.sector)}</div>
     <div class="n-tit">${esc(d.title)}</div>
-    <div class="n-sub">${esc(d.sub)}</div>
-    <div class="n-actions">
-      <div class="na" onclick="event.stopPropagation();editNode('${id}')" title="Editar">✎</div>
-      <div class="na del" onclick="event.stopPropagation();deleteNode('${id}')" title="Remover">✕</div>
-    </div>`;
+    <div class="n-sub">${esc(d.sub)}</div></div>`;
   el.onclick = () => openNode(id);
   el.addEventListener('dragstart', e => { dragSrc=id; el.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
   el.addEventListener('dragend', () => { el.classList.remove('dragging'); document.querySelectorAll('.drag-over').forEach(n=>n.classList.remove('drag-over')); });
@@ -664,7 +596,6 @@ function openNode(id){
   document.getElementById('panel').classList.add('open');
 }
 
-function editNode(id){ openNode(id); switchTab('edit'); }
 function closePanel(){ document.getElementById('panel').classList.remove('open'); document.querySelectorAll('.node').forEach(n=>n.classList.remove('selected')); curNode=null; }
 
 
@@ -674,32 +605,16 @@ function peopleBlock(d){
 }
 
 function switchTab(t){
-  curTab=t;
-  document.getElementById('t-info').className='tab'+(t==='info'?' on':'');
-  document.getElementById('t-edit').className='tab'+(t==='edit'?' on':'');
-  document.getElementById('b-info').style.display=t==='info'?'':'none';
-  document.getElementById('b-edit').style.display=t==='edit'?'':'none';
+  curTab='info';
+  document.getElementById('t-info').className='tab on';
+  document.getElementById('b-info').style.display='';
   if(!curNode) return;
   const d = S.nodes[curNode];
-  if(t==='info'){
-    document.getElementById('b-info').innerHTML=`
+  document.getElementById('b-info').innerHTML=`
       <div class="iblk"><h4>O que é</h4><p>${esc(d.desc)}</p></div>
       ${peopleBlock(d)}
       <div class="iblk"><h4>Responsabilidades</h4><ul>${(d.resp||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
       <div class="iblk"><h4>Resultado desta etapa</h4><p>${esc(d.res)}</p></div>`;
-  } else {
-    const colorOpts = COLORS.map(c=>`<option value="${c}"${d.color===c?' selected':''}>${c}</option>`).join('');
-    document.getElementById('b-edit').innerHTML=`
-      <div class="fg"><label class="fl">Setor</label><input class="fi" id="e-sec" value="${esc(d.sector)}"/></div>
-      <div class="fg"><label class="fl">Título</label><input class="fi" id="e-tit" value="${esc(d.title)}"/></div>
-      <div class="fg"><label class="fl">Descrição resumida</label><input class="fi" id="e-sub" value="${esc(d.sub)}"/></div>
-      <div class="fg"><label class="fl">Cor</label><select class="fs" id="e-col">${colorOpts}</select></div>
-      <div class="fg"><label class="fl">O que é</label><textarea class="ft" id="e-desc">${esc(d.desc)}</textarea></div>
-      <div class="fg"><label class="fl">Responsabilidades (uma por linha)</label><textarea class="ft" style="min-height:90px" id="e-resp">${(d.resp||[]).map(esc).join('\n')}</textarea></div>
-      <div class="fg"><label class="fl">Resultado desta etapa</label><textarea class="ft" id="e-res">${esc(d.res)}</textarea></div>
-      <button class="sbtn" onclick="saveNode()">Salvar alterações</button>
-      <div class="sok" id="sok">✓ Salvo com sucesso</div>`;
-  }
 }
 
 function saveNode(){
